@@ -1,16 +1,76 @@
-import { StyleSheet, Text, View, Button, TextInput } from "react-native";
+import { useState } from "react";
+import { StyleSheet, Text, View, Button, Image } from "react-native";
+import GoalInput from "./components/GoalInput";
+import GoalList from "./components/GoalList";
 
 export default function App() {
+  const [courseGoals, setCourseGoals] = useState([]);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [goalsVisible, setGoalsVisible] = useState(false);
+
+  const deleteItemHandler = id => {
+    setCourseGoals(prev => {
+      return prev.filter(item => item.id !== id);
+    });
+  };
+  const showModalHandler = () => {
+    setModalVisible(true);
+  };
+  const hideModalHandler = () => {
+    setModalVisible(false);
+  };
+  const showGoalsHandler = () => {
+    setGoalsVisible(true);
+  };
+  const hideGoalsHandler = () => {
+    setGoalsVisible(false);
+  };
+  const submitGoalHandler = (enteredGoalText, task) => {
+    if (enteredGoalText === "") return;
+    setCourseGoals(prev => [
+      ...prev,
+      { text: enteredGoalText, id: Math.random().toString(), task: task },
+    ]);
+    setModalVisible(false);
+    setGoalsVisible(true);
+  };
   return (
     <View style={styles.container}>
-      <View style={styles.inputContainer}>
-        <TextInput placeholder="Write Your Goal" style={styles.inputElement} />
-        <Button title="Add Goal" />
+      <View style={styles.imageContainer}>
+        <Image
+          style={styles.image}
+          source={require("./assets/images/ticked.png")}
+        />
       </View>
-
-      <View style={styles.goalsContainer}>
-        <Text>List of Goals</Text>
+      <View style={styles.buttonContainer}>
+        <View style={styles.button}>
+          <Button
+            title="Add New Goal"
+            color="#85bb40"
+            onPress={showModalHandler}
+          />
+        </View>
+        {courseGoals.length > 0 ? (
+          <View style={styles.button}>
+            <Button
+              title="View Existing Goals"
+              color="#008037"
+              onPress={showGoalsHandler}
+            />
+          </View>
+        ) : null}
       </View>
+      <GoalInput
+        visible={modalVisible}
+        submitGoalHandler={submitGoalHandler}
+        onCancel={hideModalHandler}
+      />
+      <GoalList
+        courseGoals={courseGoals}
+        deleteItemHandler={deleteItemHandler}
+        visible={goalsVisible}
+        onCancel={hideGoalsHandler}
+      />
     </View>
   );
 }
@@ -20,25 +80,21 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 50,
     paddingHorizontal: 16,
+    backgroundColor: "black",
+    width: "100%",
   },
-  inputContainer: {
-    flex: 1,
-    flexDirection: "row",
-    justifyContent: "space-between",
+  imageContainer: {
+    backgroundColor: "#cccccc",
+    justifyContent: "center",
     alignItems: "center",
-    marginBottom: 24,
-    borderBottomWidth: 1,
-    borderBottomColor: "#cccccc",
   },
-  inputElement: {
-    borderWidth: 1,
-    borderColor: "#cccccc",
-    width: "70%",
-    padding: 5,
-    borderRadius: 7,
-    marginRight: 8,
+  buttonContainer: {
+    width: "100%",
+    justifyContent: "center",
+    alignItems: "center",
   },
-  goalsContainer: {
-    flex: 5,
+  button: {
+    marginVertical: 5,
+    width: "50%",
   },
 });
