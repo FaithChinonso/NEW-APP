@@ -1,4 +1,6 @@
-import { useState } from "react";
+import { useState, useLayoutEffect } from "react";
+import { useNavigation } from "@react-navigation/native";
+
 import {
   StyleSheet,
   Text,
@@ -8,13 +10,21 @@ import {
   SafeAreaView,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
-import GoalInput from "./components/GoalInput";
-import GoalList from "./components/GoalList";
+import GoalInput from "../components/GoalInput";
+import GoalList from "../components/GoalList";
 
 export default function Home() {
   const [courseGoals, setCourseGoals] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [goalsVisible, setGoalsVisible] = useState(false);
+
+  const navigation = useNavigation();
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerShown: false,
+    });
+  }, []);
 
   const deleteItemHandler = id => {
     setCourseGoals(prev => {
@@ -44,12 +54,12 @@ export default function Home() {
   };
   return (
     <>
-      <StatusBar style="light" />
+      {/* <StatusBar style="light" /> */}
       <SafeAreaView style={styles.container}>
         <View style={styles.imageContainer}>
           <Image
             style={styles.image}
-            source={require("./assets/images/ticked.png")}
+            source={require("../assets/images/ticked.png")}
           />
         </View>
         <View style={styles.buttonContainer}>
