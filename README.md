@@ -1,2 +1,2 @@
 # TICKED
-A Schedule application built with React Native
+A mobile application built with React Native and React Navigation
